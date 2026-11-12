@@ -1,0 +1,8 @@
+node_modules
+dist
+src-tauri/target
+src-tauri/gen
+*.log
+
+# reference frames from SVT Play (their footage, kept local)
+docs/svt-reference*.png

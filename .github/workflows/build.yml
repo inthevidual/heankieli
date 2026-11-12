@@ -1,0 +1,79 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Apple Silicon: Metal is always on
+          - name: macOS-AppleSilicon
+            os: macos-latest
+            features: ""
+          # Vulkan runs on NVIDIA, AMD and Intel GPUs with the normal driver,
+          # without shipping the CUDA runtime
+          - name: Windows-x64
+            os: windows-latest
+            features: "--features vulkan"
+          - name: Linux-x64
+            os: ubuntu-22.04
+            features: "--features vulkan"
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Linux packages
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf \
+            libssl-dev libxdo-dev build-essential cmake
+
+      - name: Vulkan SDK
+        if: runner.os != 'macOS'
+        uses: jakoch/install-vulkan-sdk-action@v1.8.1
+        with:
+          vulkan_version: latest
+          install_runtime: true
+          cache: true
+          stripdown: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+          key: ${{ matrix.name }}
+
+      - name: Frontend
+        run: |
+          npm ci
+          npm test
+          npm run check
+
+      - name: Build
+        shell: bash
+        run: npx tauri build ${{ matrix.features }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Heankieli-${{ matrix.name }}
+          path: |
+            src-tauri/target/release/bundle/dmg/*.dmg
+            src-tauri/target/release/bundle/nsis/*.exe
+            src-tauri/target/release/bundle/msi/*.msi
+            src-tauri/target/release/bundle/deb/*.deb
+            src-tauri/target/release/bundle/appimage/*.AppImage
+          if-no-files-found: error

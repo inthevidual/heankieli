@@ -1,0 +1,176 @@
+@font-face { font-family: "Barlow"; src: url("./assets/fonts/Barlow-Regular.ttf") format("truetype"); font-weight: 400; font-display: block; }
+@font-face { font-family: "Barlow"; src: url("./assets/fonts/Barlow-Medium.ttf") format("truetype"); font-weight: 500; font-display: block; }
+@font-face { font-family: "Barlow"; src: url("./assets/fonts/Barlow-SemiBold.ttf") format("truetype"); font-weight: 600; font-display: block; }
+@font-face { font-family: "Barlow"; src: url("./assets/fonts/Barlow-Bold.ttf") format("truetype"); font-weight: 700; font-display: block; }
+@font-face { font-family: "Barlow"; src: url("./assets/fonts/Barlow-Black.ttf") format("truetype"); font-weight: 900; font-display: block; }
+@font-face { font-family: "B612"; src: url("./assets/fonts/B612-Regular.ttf") format("truetype"); font-weight: 400; font-display: block; }
+@font-face { font-family: "B612"; src: url("./assets/fonts/B612-Bold.ttf") format("truetype"); font-weight: 700; font-display: block; }
+@font-face { font-family: "B612 Mono"; src: url("./assets/fonts/B612Mono-Bold.ttf") format("truetype"); font-weight: 700; font-display: block; }
+@font-face { font-family: "Archivo"; src: url("./assets/fonts/Archivo-Variable.ttf") format("truetype"); font-weight: 100 900; font-stretch: 62% 125%; font-display: block; }
+@font-face { font-family: "Roboto Condensed"; src: url("./assets/fonts/RobotoCondensed-Variable.ttf") format("truetype"); font-weight: 100 900; font-display: block; }
+@font-face { font-family: "Noto Sans"; src: url("./assets/fonts/NotoSans-Regular.ttf") format("truetype"); font-weight: 400; font-display: block; }
+@font-face { font-family: "Noto Sans"; src: url("./assets/fonts/NotoSans-Medium.ttf") format("truetype"); font-weight: 500 600; font-display: block; }
+@font-face { font-family: "Noto Sans"; src: url("./assets/fonts/NotoSans-Bold.ttf") format("truetype"); font-weight: 700; font-display: block; }
+
+:root {
+  /* Tornedalian flag: yellow, white, blue. The yellow is Lagom's, the blue Ren's. */
+  --yellow: #fecc02;
+  --yellow-soft: #fff4c2;
+  --blue: #003580;
+  --blue-2: #0a4aa6;
+  --blue-soft: #e6edf8;
+  --ink: #14233d;
+  --ink-2: #44506a;
+  --muted: #78808f;
+  --paper: #f4f2ea;
+  --card: #ffffff;
+  --line: #e3dfd3;
+  --line-2: #d3cebf;
+  --stage: #0d1117;
+  --danger: #b42318;
+  --danger-soft: #fdecea;
+  --ok: #1d7a46;
+  --warn: #9a6700;
+  --warn-soft: #fff6dc;
+  --radius: 10px;
+  --radius-sm: 7px;
+  --shadow: 0 1px 2px rgba(20, 35, 61, 0.06), 0 2px 8px rgba(20, 35, 61, 0.06);
+  --shadow-lg: 0 10px 40px rgba(20, 35, 61, 0.22);
+
+  --font-head: "Barlow", system-ui, sans-serif;
+  --font-label: "B612", system-ui, sans-serif;
+  --font-body: "Barlow", system-ui, sans-serif;
+  --font-mono: "B612 Mono", ui-monospace, monospace;
+
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#app { height: 100%; }
+
+input, textarea, select, button { font: inherit; color: inherit; }
+textarea, input[type="text"], input[type="number"] { user-select: text; -webkit-user-select: text; }
+
+/* Small uppercase tracked labels, the way the plugin panels are lettered */
+.label {
+  font-family: var(--font-label);
+  font-weight: 700;
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.mono { font-family: var(--font-body); font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: 0.01em; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line-2);
+  background: var(--card);
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.12s, border-color 0.12s, box-shadow 0.12s, transform 0.05s;
+}
+.btn:hover:not(:disabled) { border-color: var(--ink-2); }
+.btn:active:not(:disabled) { transform: translateY(1px); }
+.btn:disabled { opacity: 0.45; cursor: default; }
+.btn:focus-visible, .icon-btn:focus-visible, .seg button:focus-visible { outline: 2px solid var(--blue-2); outline-offset: 2px; }
+.btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+.btn.primary:hover:not(:disabled) { background: var(--blue-2); border-color: var(--blue-2); }
+.btn.accent { background: var(--yellow); border-color: #e9bb00; color: var(--ink); }
+.btn.accent:hover:not(:disabled) { background: #ffd633; border-color: #d9ad00; }
+.btn.danger { color: var(--danger); }
+.btn.ghost { border-color: transparent; background: transparent; }
+.btn.ghost:hover:not(:disabled) { background: rgba(20, 35, 61, 0.06); border-color: transparent; }
+.btn.small { height: 28px; padding: 0 10px; font-size: 13px; }
+
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  border: 0;
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.icon-btn:hover:not(:disabled) { background: rgba(20, 35, 61, 0.08); color: var(--ink); }
+.icon-btn:disabled { opacity: 0.35; cursor: default; }
+.icon-btn svg, .btn svg { width: 17px; height: 17px; flex: none; }
+
+/* Segmented control */
+.seg {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  background: #ebe7dc;
+  border-radius: var(--radius-sm);
+  padding: 3px;
+  gap: 3px;
+}
+.seg button {
+  border: 0;
+  background: transparent;
+  border-radius: 5px;
+  padding: 6px 8px;
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--ink-2);
+  cursor: pointer;
+  line-height: 1.15;
+}
+.seg button.on { background: var(--card); color: var(--ink); box-shadow: 0 1px 2px rgba(20, 35, 61, 0.14); }
+.seg button small { display: block; font-weight: 500; font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+
+.field { display: grid; gap: 6px; }
+.field + .field { margin-top: 14px; }
+
+input[type="text"], input[type="number"], textarea, select {
+  width: 100%;
+  border: 1px solid var(--line-2);
+  background: var(--card);
+  border-radius: var(--radius-sm);
+  padding: 7px 10px;
+  font-weight: 500;
+  font-size: 14px;
+  outline: none;
+}
+input:focus, textarea:focus, select:focus { border-color: var(--blue-2); box-shadow: 0 0 0 3px rgba(10, 74, 166, 0.15); }
+select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--ink-2) 50%), linear-gradient(135deg, var(--ink-2) 50%, transparent 50%); background-position: calc(100% - 15px) 50%, calc(100% - 10px) 50%; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 28px; }
+
+input[type="range"] { width: 100%; accent-color: var(--blue); }
+input[type="checkbox"] { accent-color: var(--blue); width: 16px; height: 16px; margin: 0; }
+
+.check { display: flex; align-items: center; gap: 9px; font-size: 14px; cursor: pointer; }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: #cfc9b8; border-radius: 10px; border: 2px solid transparent; background-clip: padding-box; }
+::-webkit-scrollbar-track { background: transparent; }
+
+.muted { color: var(--muted); }
