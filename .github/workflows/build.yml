@@ -34,7 +34,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf \
-            libssl-dev libxdo-dev build-essential cmake
+            libssl-dev libxdo-dev build-essential cmake libvulkan-dev
 
       - name: Vulkan SDK
         if: runner.os != 'macOS'
@@ -93,7 +93,16 @@ jobs:
 
       - name: Build
         shell: bash
-        run: npx tauri build ${{ matrix.features }}
+        run: |
+          # MSBuild's file tracker fails on the long paths of whisper.cpp's
+          # Vulkan shader build, so Windows builds in a short folder
+          if [ "$RUNNER_OS" = Windows ]; then
+            export CARGO_TARGET_DIR=C:/t
+            npx tauri build ${{ matrix.features }}
+            mkdir -p src-tauri/target/release && cp -r C:/t/release/bundle src-tauri/target/release/
+          else
+            npx tauri build ${{ matrix.features }}
+          fi
 
       - uses: actions/upload-artifact@v4
         with:
