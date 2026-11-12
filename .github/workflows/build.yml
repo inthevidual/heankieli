@@ -63,6 +63,34 @@ jobs:
           npm test
           npm run check
 
+      # ffmpeg 9.0.2 travels with the app on macOS and Windows; Linux uses the system's
+      - name: ffmpeg for macOS
+        if: runner.os == 'macOS'
+        run: |
+          mkdir -p src-tauri/binaries && cd src-tauri/binaries
+          base=https://ffmpeg.martin-riedl.de/download/macos/arm64/1789931890_9.0.2
+          curl -sfL -o ffmpeg.zip $base/ffmpeg.zip
+          curl -sfL -o ffprobe.zip $base/ffprobe.zip
+          echo "c8ed4c4e6978a03c485edbfe4e0a5dc2380f8a30bba5150531b31b094492d924  ffmpeg.zip" | shasum -a 256 -c
+          echo "fcbe839537485eaee7a7a8bc5cbc0f90d53617e80943e8a5b2e31cb851197ea6  ffprobe.zip" | shasum -a 256 -c
+          unzip -o ffmpeg.zip && unzip -o ffprobe.zip && rm *.zip
+          mv ffmpeg ffmpeg-aarch64-apple-darwin && mv ffprobe ffprobe-aarch64-apple-darwin
+          chmod +x ffmpeg-* ffprobe-*
+          ./ffmpeg-aarch64-apple-darwin -hide_banner -version | sed -n 1p
+
+      - name: ffmpeg for Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force src-tauri/binaries | Out-Null
+          $zip = "$env:RUNNER_TEMP/ffmpeg.zip"
+          Invoke-WebRequest -Uri https://github.com/GyanD/codexffmpeg/releases/download/9.0.2/ffmpeg-9.0.2-essentials_build.zip -OutFile $zip
+          if ((Get-FileHash $zip -Algorithm SHA256).Hash -ne "60F467265B1E312373DBCD92200C2618A74850F98D3D078E94296BB3FA2047BA") { throw "ffmpeg checksum mismatch" }
+          Expand-Archive $zip -DestinationPath "$env:RUNNER_TEMP/ff"
+          Copy-Item "$env:RUNNER_TEMP/ff/ffmpeg-9.0.2-essentials_build/bin/ffmpeg.exe" src-tauri/binaries/ffmpeg-x86_64-pc-windows-msvc.exe
+          Copy-Item "$env:RUNNER_TEMP/ff/ffmpeg-9.0.2-essentials_build/bin/ffprobe.exe" src-tauri/binaries/ffprobe-x86_64-pc-windows-msvc.exe
+          src-tauri/binaries/ffmpeg-x86_64-pc-windows-msvc.exe -hide_banner -version | Select-Object -First 1
+
       - name: Build
         shell: bash
         run: npx tauri build ${{ matrix.features }}

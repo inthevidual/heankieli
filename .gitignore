@@ -6,3 +6,4 @@ src-tauri/gen
 
 # reference frames from SVT Play (their footage, kept local)
 docs/svt-reference*.png
+src-tauri/binaries

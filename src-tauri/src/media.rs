@@ -14,6 +14,13 @@ pub const SAMPLE_RATE: u32 = 16_000;
 
 fn find_tool(name: &str) -> Option<PathBuf> {
     let exe = if cfg!(windows) { format!("{name}.exe") } else { name.to_string() };
+    // the copy bundled with the app (macOS and Windows) sits next to the executable
+    if let Some(dir) = std::env::current_exe().ok().and_then(|p| p.parent().map(|d| d.to_path_buf())) {
+        let p = dir.join(&exe);
+        if p.is_file() {
+            return Some(p);
+        }
+    }
     if let Some(paths) = std::env::var_os("PATH") {
         for dir in std::env::split_paths(&paths) {
             let p = dir.join(&exe);

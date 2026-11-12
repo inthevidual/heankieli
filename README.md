@@ -61,7 +61,9 @@ preview copy with ffmpeg and plays that instead.
 
 ## Requirements
 
-- **ffmpeg** on the PATH (`brew install ffmpeg`, `pacman -S ffmpeg`, `apt install ffmpeg`).
+- **ffmpeg**: bundled with the macOS and Windows builds (ffmpeg 9.0.2, GPL, from
+  [Martin Riedl](https://ffmpeg.martin-riedl.de) and [Gyan](https://www.gyan.dev/ffmpeg/builds/)).
+  On Linux it comes from the system (`pacman -S ffmpeg`, `apt install ffmpeg`).
 - Linux: WebKitGTK 4.1 and GStreamer (`gst-plugins-good`; `gst-libav` lets
   most files play without a preview copy), an NVIDIA GPU with the CUDA runtime.
 - macOS 13+ on Apple Silicon.
